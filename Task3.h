@@ -8,24 +8,22 @@
 // aggregate(xs, concat, std::string("0")); // "01234"
 
 namespace Task3 {
-    enum operation { add, mul, concat };
+    template<typename It, typename T, typename Func>
+    T aggregate(It first, It last, T init, Func f) {
+        if (first == last) return init;
 
-    template<typename T, typename V>
-    V aggregate(const std::vector<T> &vector, operation op, V init) {
-        switch (op) {
-            case add:
-                return std::accumulate(vector.begin(), vector.end(), init, std::plus<V>());
-            case mul:
-                return std::accumulate(vector.begin(), vector.end(), init, std::multiplies<V>());
-            default:
-                return init;
+        while (first != last) {
+            init = f(init, *first);
+            ++first;
         }
+
+        return init;
     }
 
-    template<typename T>
-    std::string aggregate(const std::vector<T> &vector, operation op, std::string init) {
-        for (const T &elem: vector) {
-            init += std::to_string(elem);
+    template<typename C, typename T, typename Func>
+    T aggregate(const C &container, T init, Func f) {
+        for (const auto &elem: container) {
+            init = f(init, elem);
         }
         return init;
     }

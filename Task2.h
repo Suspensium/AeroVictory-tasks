@@ -11,16 +11,13 @@
 namespace Task2 {
     enum operation { add, mul };
 
-    int32_t aggregate(const std::vector<int32_t> &vector, operation op) {
-        switch (op) {
-            case add:
-                return std::accumulate(vector.begin(), vector.end(),
-                                       0, std::plus<int32_t>());
-            case mul:
-                return std::accumulate(vector.begin(), vector.end(),
-                                       1, std::multiplies<int32_t>());
-            default:
-                return 0;
+    template<typename T, typename Func>
+    T aggregate(const std::vector<T> &vector, Func f) {
+        T sum{vector.at(0)};
+        for (size_t i = 1; i < vector.size(); i++) {
+            sum = f(sum, vector[i]);
         }
+
+        return sum;
     }
 }
